@@ -1,5 +1,5 @@
-import Link from 'next/link';
-
+import Link from "next/link";
+import Image from 'next/image'
 
 export interface Product {
     id: number;
@@ -16,11 +16,21 @@ export default async function Product() {
 
     return (
         <div>
-            {productData.map(product => (
+            {productData.map((product) => (
                 <div key={product.id}>
                     <Link href={`/product/${product.id}`}>{product.title}</Link>
+                    <Image
+                        src={product.image}
+                        width={200}
+                        height={200}
+                        alt={'lol'}
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL={product.image}
+                    />
+
                 </div>
             ))}
         </div>
-    )
+    );
 }

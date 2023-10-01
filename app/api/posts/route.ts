@@ -21,11 +21,14 @@ export const POST = async (request: NextRequest) => {
 
 
 export const GET = async () => {
-    try {
-      const posts = await prisma.post.findMany();
-  
-      return NextResponse.json(posts);
-    } catch (error) {
-      return NextResponse.json({ error: "Get error" }, { status: 500 });
-    }
-  };
+  try {
+    const posts = await prisma.post.findMany();
+
+    return NextResponse.json(posts);
+  } catch (error) {
+    return NextResponse.json({ error: "Get error" }, { status: 500 });
+  }
+};
+
+
+
