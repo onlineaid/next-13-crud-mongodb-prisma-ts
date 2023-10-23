@@ -33,6 +33,11 @@ export default function Header() {
             label: 'Post',
             href: '/post'
         },
+
+        {
+            label: 'Search',
+            href: '/search'
+        },
     ]
     return (
         <div>

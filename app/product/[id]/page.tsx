@@ -22,8 +22,6 @@ export default async function page({ params }: { params: Params }) {
         width={500}
         height={500}
         alt="Picture of the author"
-        placeholder='blur'
-        blurDataURL="https://fakestoreapi.com/img"
       />
     </div>
   )

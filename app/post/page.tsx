@@ -1,53 +1,65 @@
-import Link from 'next/link';
+'use client'
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface Product {
-    id: string;
-    title: string;
-    description: string;
-    createAt: string;
-    updateAt: string;
-  }
-  
-  interface SearchResponse {
-    results: Product[];
-  }
-  
-
-const url = `https://jsonplaceholder.typicode.com/posts`;
-const searchUrl = `http://localhost:3000/api/search?query=${`init`}`;
-
-async function getPostsData() {
-    const response = await fetch(url);
-    const productData: Product[] = await response.json();
-    return productData
+  id: string;
+  title: string;
+  description: string;
+  createAt: string;
+  updateAt: string;
 }
 
-async function getSearchData() {
-    const response = await fetch(searchUrl);
-    const searchData: SearchResponse = await response.json();
-    return searchData
-}
+const url = `http://localhost:3000/api/posts`;
+
+const getPostsData = async () => {
+  const response = await fetch(url, { cache: "no-store" });
+  const productData: Product[] = await response.json();
+  return productData;
+};
+
 export default async function Product() {
-    const [posts, search] = await Promise.all([getPostsData(), getSearchData()])
+  const [posts, setPosts] = useState<Product[]>([]);
 
-    return (
-        <div className=''>
-            <h1 className='text-2xl mt-10'>Post page</h1>
-            <div>
-                {search.results.map(s => (
-                    <div key={s.id} className=' p-5 mt-10 bg-red-500'>
-                        <h2 className='text-1xl'> <Link href={`/post/${s.id}`}>{s.title}</Link></h2>
-                    </div>
-                ))}
-            </div>
+  useEffect(() => {
+    getPostsData().then((data) => setPosts(data));
+  }, []);
 
-            <hr />
+  const handleDelete = async (postId: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+        method: "DELETE",
+      });
 
-            {posts.map(post => (
-                <div key={post.id} className=' p-5 mt-10 bg-red-500'>
-                    <h2 className='text-1xl'> <Link href={`/post/${post.id}`}>{post.title}</Link></h2>
-                </div>
-            ))}
+      if (response.ok) {
+        // If the delete request is successful, refresh the post list
+        const updatedPosts = posts.filter((post) => post.id !== postId);
+        setPosts(updatedPosts);
+      } else {
+        console.error("An error occurred while deleting the post");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="">
+      <h1 className="text-2xl mt-10">Post page</h1>
+
+      <Link href={`/post/create`}>Create post</Link>
+
+      <hr />
+
+      {posts.map((item) => (
+        <div key={item.id} className="p-5 mt-10 bg-red-500">
+          <div className="text-1xl flex justify-between">
+            <Link href={`/post/${item.id}`}>{item.title}</Link>
+            <button onClick={() => handleDelete(item.id)}>Delete Post</button>
+          </div>
         </div>
-    )
+      ))}
+    </div>
+  );
 }

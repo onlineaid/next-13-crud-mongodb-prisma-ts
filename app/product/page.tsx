@@ -25,8 +25,7 @@ export default async function Product() {
                         height={200}
                         alt={'lol'}
                         loading="lazy"
-                        placeholder="blur"
-                        blurDataURL={product.image}
+                        className="transform transition-transform duration-300"
                     />
 
                 </div>
